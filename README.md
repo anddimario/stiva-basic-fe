@@ -3,6 +3,11 @@ Basic frontend with [Vue.js](https://vuejs.org/) for [stiva cms](https://github.
 ![Login page](https://github.com/anddimario/stiva-basic-fe/blob/master/screenshot/login.png)
 ![Users list page](https://github.com/anddimario/stiva-basic-fe/blob/master/screenshot/users.png)
 
+### Requirements
+- nodejs > 8
+- [serverless](https://serverless.com/) > 1
+- (optional for devs) For fe: `npm install -g webpack-dev-server`
+
 ### Run fe on localhost
 ```
 cd staticSites/basic
