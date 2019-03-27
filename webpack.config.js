@@ -19,7 +19,14 @@ module.exports = {
         test: /\.js?$/,
         exclude: /(node_modules)/,
         use: 'babel-loader'
-      }
+      },
+      {
+        test: /\.css$/,
+        use: [
+          'vue-style-loader',
+          'css-loader'
+        ]
+      },
     ]
   },
   plugins: [
@@ -36,7 +43,9 @@ module.exports = {
       apiUrl: process.env.API_URL || 'http://localhost:3000',
       siteHeader: {
         'X-SLSMU-SITE': process.env.SITE || 'localhost'
-      }
+      },
+      // Use this to create dynamic routes for contents
+      contents: ['post']
     })
   }
 };

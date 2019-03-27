@@ -50,16 +50,16 @@
           </li>
         </ul>
       </li>
-      <li>
-        CONTENTS
+      <li v-for="content in contentsAvailable">
+        {{ content.toUpperCase() }}
         <ul>
           <li v-if="me.userRole === 'admin'">
-            <router-link to="/contents/add">
+            <router-link :to="'/contents/' + content + '/add'">
               Add
             </router-link>
           </li>
           <li v-if="me.userRole === 'admin'">
-            <router-link to="/contents">
+            <router-link :to="'/contents/' + content">
               List
             </router-link>
           </li>
@@ -86,8 +86,14 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
+import config from 'config';
 
 export default {
+  data() {
+    return {
+      contentsAvailable: config.contents
+    }
+  },
   computed: {
     ...mapState({
       me: state => state.users.me,

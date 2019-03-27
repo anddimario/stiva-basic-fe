@@ -8,6 +8,10 @@ Basic frontend with [Vue.js](https://vuejs.org/) for [stiva cms](https://github.
 - [serverless](https://serverless.com/) > 1
 - (optional for devs) For fe: `npm install -g webpack-dev-server`
 
+### Config
+- Edit config object in `src/webpack.config.js`
+- Configure forms in `src/forms`
+
 ### Run fe on localhost
 ```
 cd staticSites/basic

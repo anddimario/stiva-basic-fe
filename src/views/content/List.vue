@@ -3,7 +3,7 @@
     <div v-if="me.userRole === 'admin'">
       <form @submit.prevent="searchContentsSubmit">
         <div class="form-group">
-          <label for="filters">Search by filters</label>
+          <label for="filters">Search {{ contentType }} by filters</label>
           <input
             v-model="filters"
             type="text"
@@ -101,7 +101,7 @@
           Content updated
         </p>
       </div>
-      <h3>Contents:</h3>
+      <h3>{{ contentType }}:</h3>
       <em v-if="contents.loading">Loading contents...</em>
       <span
         v-if="contents.error"
@@ -137,6 +137,7 @@ import { mapState, mapActions } from 'vuex';
 export default {
   data() {
     return {
+      contentType: this.$route.path.split('/')[2],
       submitted: false,
       filters: ''
     };
@@ -152,9 +153,9 @@ export default {
   },
   created() {
     this.getMe();
-    this.list({
-      contentType: 'post'
-    });
+      this.list({
+        contentType: this.contentType
+      });
   },
   methods: {
     ...mapActions('users', {
@@ -179,12 +180,13 @@ export default {
       });
     },
     searchContentsSubmit(e) {
+      console.log(this.$route, this.contentType);
       this.submitted = true;
       this.list({
         contentType: 'post',
         filters: this.filters
       });
     }
-  }
+  },
 };
 </script>

@@ -51,6 +51,7 @@ function list(contentType, filters) {
     headers: { ...authHeader(), ...config.siteHeader }
   };
   let url = `${config.apiUrl}/contents?type=list&contentType=${contentType}`;
+
   if (filters) {
     filters = encodeURIComponent(filters);
     url += `&filters=${filters}`;

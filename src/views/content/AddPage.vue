@@ -1,25 +1,13 @@
 <template>
   <div>
     <div v-if="me.userRole === 'admin'">
-      <h2>Add Content</h2>
       <form @submit.prevent="handleSubmit">
-        <div class="form-group">
-          <label for="title">Title</label>
-          <input
-            v-model="content.title"
-            v-validate="'required'"
-            type="text"
-            name="title"
-            class="form-control"
-            :class="{ 'is-invalid': submitted && errors.has('title') }"
-          >
-          <div
-            v-if="submitted && errors.has('title')"
-            class="invalid-feedback"
-          >
-            {{ errors.first('title') }}
-          </div>
-        </div>
+        <vue-form-generator
+          :schema="schema"
+          :model="model"
+          :options="formOptions"
+        />
+
         <div class="form-group">
           <button
             class="btn btn-primary"
@@ -53,14 +41,15 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
+import { contentsForms } from '../../forms/contents';
 
 export default {
   data() {
     return {
-      content: {
-        contentType: 'post',
-        title: '',
-      },
+      contentType: this.$route.path.split('/')[2],
+      model: contentsForms[this.$route.path.split('/')[2]].model,
+      schema: contentsForms[this.$route.path.split('/')[2]].schema,
+      formOptions: contentsForms[this.$route.path.split('/')[2]].formOptions,
       submitted: false
     };
   },
@@ -82,12 +71,7 @@ export default {
     }),
     handleSubmit(e) {
       this.submitted = true;
-      this.$validator.validate().then(valid => {
-        if (valid) {
-          console.log(this.content);
-          this.add(this.content);
-        }
-      });
+      this.add(this.model);
     }
   }
 };
