@@ -32,8 +32,8 @@ function add(content) {
 }
 
 function update(content) {
-  const body = content;
   console.log(content);
+  const body = content;
   body.type = 'update';
   const requestOptions = {
     method: 'POST',

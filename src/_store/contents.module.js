@@ -34,13 +34,19 @@ const actions = {
       );
   },
 
-  update({ commit }, content) {
+  update({ dispatch, commit }, content) {
     commit('updateRequest');
 
     contentService.update(content)
       .then(
-        content => commit('updateSuccess', content),
-        error => commit('updateFailure', error)
+        content => {
+          commit('updateSuccess', content);
+          dispatch('alert/success', 'Content updated', { root: true });
+        },
+        error => {
+          commit('updateFailure', error);
+          dispatch('alert/error', error, { root: true });
+        }
       );
   },
 

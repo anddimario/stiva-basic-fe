@@ -1,5 +1,6 @@
 {
   "registration": "Registration",
   "fullname": "Full name",
-  "role": "Role"
+  "role": "Role",
+  "welcome": "a basic frontent with vue for stiva"
 }

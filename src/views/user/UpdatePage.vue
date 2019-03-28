@@ -1,72 +1,15 @@
 <template>
   <div>
+    <h2>Update User</h2>
     <div v-if="me.userRole === 'admin'">
       You are an admin, you can edit all user
     </div>
-    <h2>Update User</h2>
-    <form
-      data-vv-scope="userUpdate"
-      @submit.prevent="updateSubmit('userUpdate')"
-    >
-      <input
-        type="hidden"
-        name="type"
-        value="user"
-      >
-      <div class="form-group">
-        <label for="fullname">Full Name</label>
-        <input
-          v-model="user.fullname"
-          v-validate="'required'"
-          type="text"
-          name="fullname"
-          class="form-control"
-          :class="{ 'is-invalid': submitted && errors.has('userUpdate.fullname') }"
-          :placeholder="me.fullname"
-        >
-        <div
-          v-if="submitted && errors.has('userUpdate.fullname')"
-          class="invalid-feedback"
-        >
-          {{ errors.first('userUpdate.fullname') }}
-        </div>
-      </div>
-      <div v-if="me.userRole === 'admin'">
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input
-            v-model="user.email"
-            v-validate="'required'"
-            type="text"
-            name="email"
-            class="form-control"
-            :class="{ 'is-invalid': submitted && errors.has('userUpdate.email') }"
-          >
-          <div
-            v-if="submitted && errors.has('userUpdate.email')"
-            class="invalid-feedback"
-          >
-            {{ errors.first('userUpdate.email') }}
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="userRole">User Role</label>
-          <input
-            v-model="user.userRole"
-            v-validate="'required'"
-            type="text"
-            name="userRole"
-            class="form-control"
-            :class="{ 'is-invalid': submitted && errors.has('userUpdate.userRole') }"
-          >
-          <div
-            v-if="submitted && errors.has('userUpdate.userRole')"
-            class="invalid-feedback"
-          >
-            {{ errors.first('userUpdate.userRole') }}
-          </div>
-        </div>
-      </div>
+    <form @submit.prevent="updateUserSubmit">
+      <vue-form-generator
+        :schema="schemaUser"
+        :model="modelUser"
+        :options="formOptionsUser"
+      />
       <div class="form-group">
         <button
           class="btn btn-primary"
@@ -93,69 +36,12 @@
       User updated
     </p>
     <h2>Update Password</h2>
-    <form
-      data-vv-scope="userPasswordUpdate"
-      @submit.prevent="updateSubmit('userPasswordUpdate')"
-    >
-      <input
-        type="hidden"
-        name="type"
-        value="password"
-      >
-      <div v-if="me.userRole === 'admin'">
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input
-            v-model="user.email"
-            v-validate="'required'"
-            type="text"
-            name="email"
-            class="form-control"
-            :class="{ 'is-invalid': submitted && errors.has('userUpdate.email') }"
-          >
-          <div
-            v-if="submitted && errors.has('userUpdate.email')"
-            class="invalid-feedback"
-          >
-            {{ errors.first('userUpdate.email') }}
-          </div>
-        </div>
-      </div>
-      <div class="form-group">
-        <label htmlFor="new">New Password</label>
-        <input
-          ref="new"
-          v-model="password.new"
-          v-validate="{ required: true, min: 6 }"
-          type="password"
-          name="new"
-          class="form-control"
-          :class="{ 'is-invalid': submitted && errors.has('userPasswordUpdate.new') }"
-        >
-        <div
-          v-if="submitted && errors.has('userPasswordUpdate.new')"
-          class="invalid-feedback"
-        >
-          {{ errors.first('userPasswordUpdate.new') }}
-        </div>
-      </div>
-      <div class="form-group">
-        <label htmlFor="repeat">Repeat Password</label>
-        <input
-          v-model="password.repeat"
-          v-validate="{ required: true, min: 6, confirmed: 'new' }"
-          type="password"
-          name="repeat"
-          class="form-control"
-          :class="{ 'is-invalid': submitted && errors.has('userPasswordUpdate.repeat') }"
-        >
-        <div
-          v-if="submitted && errors.has('userPasswordUpdate.repeat')"
-          class="invalid-feedback"
-        >
-          {{ errors.first('userPasswordUpdate.repeat') }}
-        </div>
-      </div>
+    <form @submit.prevent="updatePasswordSubmit">
+      <vue-form-generator
+        :schema="schemaPassword"
+        :model="modelPassword"
+        :options="formOptionsPassword"
+      />
       <div class="form-group">
         <button
           class="btn btn-primary"
@@ -186,20 +72,17 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
+import { userForms } from '../../forms/user';
 
 export default {
   data() {
     return {
-      user: {
-        fullname: '',
-        email: '',
-        userRole: ''
-      },
-      password: {
-        email: '',
-        new: '',
-        repeat: ''
-      },
+      modelUser: {},
+      schemaUser: {},
+      formOptionsUser: userForms.updateUser.formOptions,
+      modelPassword: {},
+      schemaPassword: {},
+      formOptionsPassword: userForms.updatePassword.formOptions,
       submitted: false
     };
   },
@@ -219,17 +102,48 @@ export default {
       update: 'update',
       updatePassword: 'updatePassword'
     }),
-    updateSubmit(e) {
+    updatePasswordSubmit(e) {
       this.submitted = true;
-      this.$validator.validateAll(e).then(valid => {
-        if (valid) {
-          if (this.password.new && this.password.repeat) {
-            this.updatePassword(this.password);
-          } else if (Object.keys(this.user).length > 0) {
-            this.update(this.user);
+      this.updatePassword(this.modelPassword);
+    },
+    updateUserSubmit(e) {
+      this.submitted = true;
+      this.update(this.modelUser);
+    }
+  },
+  watch: {
+    me: function () {
+      // remove schema fields based on user role
+      const schemaUser = userForms.updateUser.schema;
+      const modelUser = userForms.updateUser.model;
+      const schemaPassword = userForms.updatePassword.schema;
+      const modelPassword = userForms.updatePassword.model;
+      if (this.me && this.me.userRole) {
+        if (this.me.userRole !== 'admin') {
+          // update user form
+          const adminUserFields = ['userRole'];
+          for (const field of schemaUser.fields) {
+            if (adminUserFields.includes(field.model)) {
+              const position = schemaUser.fields.indexOf(field);
+              schemaUser.fields.splice(position, 1);
+              delete modelUser[field.model];
+            }
+          }
+          // update password form
+          const adminPasswordFields = ['email'];
+          for (const field of schemaPassword.fields) {
+            if (adminPasswordFields.includes(field.model)) {
+              const position = schemaPassword.fields.indexOf(field);
+              schemaPassword.fields.splice(position, 1);
+              delete modelPassword[field.model];
+            }
           }
         }
-      });
+        this.schemaUser = schemaUser;
+        this.modelUser = modelUser;
+        this.schemaPassword = schemaPassword;
+        this.modelPassword = modelPassword;
+      }
     }
   }
 };

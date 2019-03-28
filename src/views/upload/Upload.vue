@@ -1,32 +1,36 @@
 <template>
   <div>
-    <div class="uploadResults"></div>
-    <div class="file-upload-form">
-      Upload an image file:
-      <input
-        type="file"
-        accept="image/*"
-        @change="previewImage"
+    <div v-if="permissionCheck('creators', me.userRole)">
+      <div class="uploadResults" />
+      <div class="file-upload-form">
+        Upload an image file:
+        <input
+          type="file"
+          accept="image/*"
+          @change="previewImage"
+        >
+      </div>
+      <div
+        v-if="imageData.length > 0"
+        class="image-preview"
       >
-    </div>
-    <div
-      v-if="imageData.length > 0"
-      class="image-preview"
-    >
-      <img
-        class="preview"
-        :src="imageData"
-      >
+        <img
+          class="preview"
+          :src="imageData"
+        >
+      </div>
     </div>
   </div>
 </template>
 <script>
 import { mapState, mapActions } from 'vuex';
-import {uploadService} from '../../_services/upload.service';
+import { uploadService } from '../../_services/upload.service';
+import config from 'config';
 
 export default {
   data: function() {
     return {
+      contentsPermissions: config.permissions,
       imageData: '' // we will store base64 format of image in this string
     };
   },
@@ -39,8 +43,8 @@ export default {
     this.getMe();
   },
   methods: {
-    ...mapActions("users", {
-      getMe: "getMe",
+    ...mapActions('users', {
+      getMe: 'getMe',
     }),
     previewImage: function(event) {
       // Reference to the DOM input element
@@ -56,7 +60,7 @@ export default {
           this.imageData = e.target.result;
           uploadService.sendFile(e.target.result, input.files[0].name)
             .then((result) => {
-              this.$store.dispatch('alert/success', "Image uploaded");
+              this.$store.dispatch('alert/success', 'Image uploaded');
             })
             .catch((err) => {
               this.$store.dispatch('alert/error', err.message);
@@ -65,6 +69,9 @@ export default {
         // Start the reader job - read file as a data url (base64 format)
         reader.readAsDataURL(input.files[0]);
       }
+    },
+    permissionCheck(action, role) {
+      return this.contentsPermissions['upload'][action].indexOf(role) > -1;
     }
   }
 };

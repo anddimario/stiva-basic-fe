@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div v-if="permissionCheck('viewers', me.userRole)">
       <h3>Uploads</h3>
       <em v-if="uploads.loading">Loading uploads...</em>
       <span
@@ -23,16 +24,18 @@
           >Delete</a></span>
         </li>
       </ul>
-
+    </div>
   </div>
 </template>
 
 <script>
 import { mapState, mapActions } from 'vuex';
+import config from 'config';
 
 export default {
   data() {
     return {
+      contentsPermissions: config.permissions,
     };
   },
   created() {
@@ -53,6 +56,9 @@ export default {
       list: 'list',
       deleteUpload: 'delete'
     }),
+    permissionCheck(action, role) {
+      return this.contentsPermissions['upload'][action].indexOf(role) > -1
+    }
   }
 };
 </script>

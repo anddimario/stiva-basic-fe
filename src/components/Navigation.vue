@@ -53,12 +53,12 @@
       <li v-for="content in contentsAvailable">
         {{ content.toUpperCase() }}
         <ul>
-          <li v-if="me.userRole === 'admin'">
+          <li v-if="permissionCheck(content, 'creators', me.userRole)">
             <router-link :to="'/contents/' + content + '/add'">
               Add
             </router-link>
           </li>
-          <li v-if="me.userRole === 'admin'">
+          <li v-if="permissionCheck(content, 'viewers', me.userRole)">
             <router-link :to="'/contents/' + content">
               List
             </router-link>
@@ -68,12 +68,12 @@
       <li>
         FILES
         <ul>
-          <li v-if="me.userRole === 'admin'">
+          <li v-if="permissionCheck('upload', 'creators', me.userRole)">
             <router-link to="/uploads/add">
               Add
             </router-link>
           </li>
-          <li v-if="me.userRole === 'admin'">
+          <li v-if="permissionCheck('upload', 'viewers', me.userRole)">
             <router-link to="/uploads">
               List
             </router-link>
@@ -91,7 +91,8 @@ import config from 'config';
 export default {
   data() {
     return {
-      contentsAvailable: config.contents
+      contentsAvailable: config.contents,
+      contentsPermissions: config.permissions
     }
   },
   computed: {
@@ -104,6 +105,9 @@ export default {
     ...mapActions('account', {
       logout: 'logout',
     }),
+    permissionCheck(content, action, role) {
+      return this.contentsPermissions[content][action].indexOf(role) > -1
+    }
   }
 };
 </script>

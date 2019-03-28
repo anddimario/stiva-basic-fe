@@ -1,5 +1,6 @@
 {
   "registration": "Registrazione",
   "fullname": "Nome completo",
-  "role": "Role"
+  "role": "Role",
+  "welcome": "Un semplice frontend per stiva"
 }

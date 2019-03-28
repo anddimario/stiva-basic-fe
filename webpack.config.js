@@ -45,7 +45,17 @@ module.exports = {
         'X-SLSMU-SITE': process.env.SITE || 'localhost'
       },
       // Use this to create dynamic routes for contents
-      contents: ['post']
+      contents: ['post'],
+      permissions: {
+        post: {
+          creators: ['user', 'admin'],
+          viewers: ['guest', 'user', 'admin']
+        },
+        upload: {
+          creators: ['user', 'admin'],
+          viewers: ['user', 'admin']
+        }
+      }
     })
   }
 };

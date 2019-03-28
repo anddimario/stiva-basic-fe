@@ -1,6 +1,7 @@
 <template>
   <div>
-    <div v-if="me.userRole === 'admin'">
+    <h2>Add content</h2>
+    <div v-if="permissionCheck('creators', me.userRole)">
       <form @submit.prevent="handleSubmit">
         <vue-form-generator
           :schema="schema"
@@ -27,21 +28,14 @@
           </router-link>
         </div>
       </form>
-      <!--
-      <p v-if="added.error">
-        {{ added.error }}
-      </p>
-      <p v-if="added.done">
-        Content added
-      </p>
-      -->
     </div>
   </div>
 </template>
 
 <script>
 import { mapState, mapActions } from 'vuex';
-import { contentsForms } from '../../forms/contents';
+import { contentsForms } from '../../forms/contentsAdd';
+import config from 'config';
 
 export default {
   data() {
@@ -50,7 +44,8 @@ export default {
       model: contentsForms[this.$route.path.split('/')[2]].model,
       schema: contentsForms[this.$route.path.split('/')[2]].schema,
       formOptions: contentsForms[this.$route.path.split('/')[2]].formOptions,
-      submitted: false
+      submitted: false,
+      contentsPermissions: config.permissions
     };
   },
   created() {
@@ -72,6 +67,9 @@ export default {
     handleSubmit(e) {
       this.submitted = true;
       this.add(this.model);
+    },
+    permissionCheck(action, role) {
+      return this.contentsPermissions[this.contentType][action].indexOf(role) > -1
     }
   }
 };

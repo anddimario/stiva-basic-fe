@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="me.userRole === 'admin'">
-      <h3>Users from secure api end point:</h3>
+      <h3>Users:</h3>
       <em v-if="users.loading">Loading users...</em>
       <span
         v-if="users.error"
@@ -26,22 +26,11 @@
       </ul>
 
       <form @submit.prevent="searchUserSubmit">
-        <div class="form-group">
-          <label for="email">Search by email</label>
-          <input
-            v-model="email"
-            type="text"
-            name="email"
-            class="form-control"
-            :class="{ 'is-invalid': submitted && !email }"
-          >
-          <div
-            v-show="submitted && !email"
-            class="invalid-feedback"
-          >
-            Email is required
-          </div>
-        </div>
+        <vue-form-generator
+          :schema="schema"
+          :model="model"
+          :options="formOptions"
+        />
         <div class="form-group">
           <button
             class="btn btn-primary"
@@ -67,11 +56,14 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
+import { userForms } from '../../forms/user';
 
 export default {
   data() {
     return {
-      email: '',
+      model: userForms.search.model,
+      schema: userForms.search.schema,
+      formOptions: userForms.search.formOptions,
       submitted: false
     };
   },
@@ -95,10 +87,7 @@ export default {
     }),
     searchUserSubmit(e) {
       this.submitted = true;
-      const { email } = this;
-      if (email) {
-        this.getByEmail(email);
-      }
+      this.getByEmail(this.model);
     }
   },
   watch: {
