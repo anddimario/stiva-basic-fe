@@ -126,7 +126,7 @@ function _delete(email) {
   return fetch(`${config.apiUrl}/users?type=delete&email=${email}`, requestOptions).then(handleResponse);
 }
 
-function getRecoveryToken(email, password) {
+function getRecoveryToken(email) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...config.siteHeader },
@@ -138,7 +138,6 @@ function getRecoveryToken(email, password) {
 }
 
 function recoveryPassword(password, token) {
-  console.log(password,token);
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...config.siteHeader },

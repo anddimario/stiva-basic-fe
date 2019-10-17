@@ -44,7 +44,7 @@
       />
       <div class="form-group">
         <button
-          class="btn btn-primary"
+          class="btn btn-primary submit-user-update"
           :disabled="updatedPassword.loading"
         >
           Update
@@ -123,10 +123,13 @@ export default {
           // update user form
           const adminUserFields = ['userRole'];
           for (const field of schemaUser.fields) {
+            console.log(field.model, schemaUser.fields.indexOf(field))
             if (adminUserFields.includes(field.model)) {
               const position = schemaUser.fields.indexOf(field);
               schemaUser.fields.splice(position, 1);
-              delete modelUser[field.model];
+            } else {
+              // Init the value
+              modelUser[field.model] = this.me[field.model];
             }
           }
           // update password form

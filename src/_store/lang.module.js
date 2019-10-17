@@ -1,4 +1,4 @@
-let state = {
+const state = {
   curLanguage: null,
   languages: [
     {
@@ -18,7 +18,7 @@ const mutations = {
   setLanguage(state, lang) {
     state.curLanguage = lang;
   }
-}
+};
 
 export const lang = {
   state,

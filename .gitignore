@@ -39,3 +39,6 @@ typings
 
 
 dist/
+cypress/videos
+cypress/screenshots
+cypress/integration/examples

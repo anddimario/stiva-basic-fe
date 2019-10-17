@@ -56,7 +56,7 @@ const mutations = {
     state.list.Contents = state.list.Contents.map(content => {
       if (content.Key === key) {
         // make copy of content without 'deleting:true' property
-        const { deleting, ...contentCopy } = content;
+        const { ...contentCopy } = content;
         // return copy of content with 'deleteError:[error]' property
         return { ...contentCopy, deleteError: error };
       }

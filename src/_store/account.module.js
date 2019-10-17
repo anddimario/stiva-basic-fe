@@ -85,7 +85,7 @@ const mutations = {
     state.status = { loggingIn: true };
     state.user = user;
   },
-  loginSuccess(state, loginResult) {
+  loginSuccess(state) {
     state.status = { loggedIn: true };
   },
   loginFailure(state, error) {
@@ -97,11 +97,13 @@ const mutations = {
     Object.keys(rootState.users).forEach(key => {
       rootState.users[key] = null;
     });
+    rootState = null;
+    localStorage.removeItem('user');
   },
-  registerRequest(state, user) {
+  registerRequest(state) {
     state.status = { registering: true };
   },
-  registerSuccess(state, user) {
+  registerSuccess(state) {
     state.status = {};
   },
   registerFailure(state, error) {
@@ -111,7 +113,7 @@ const mutations = {
     state.gettingToken = { loading: true };
     state.email = email;
   },
-  getRecoveryTokenSuccess(state, loginResult) {
+  getRecoveryTokenSuccess(state) {
     state.gettingToken = {};
   },
   getRecoveryTokenFailure(state, error) {
@@ -120,7 +122,7 @@ const mutations = {
   recoveryPasswordRequest(state) {
     state.recoveringPassword = { loading: true };
   },
-  recoveryPasswordSuccess(state, loginResult) {
+  recoveryPasswordSuccess(state) {
     state.recoveringPassword = {};
   },
   recoveryPasswordFailure(state, error) {

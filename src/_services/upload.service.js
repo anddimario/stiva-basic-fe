@@ -60,7 +60,6 @@ function _delete(key) {
     method: 'GET',
     headers: { ...authHeader(), ...config.siteHeader }
   };
-console.log(key)
   return fetch(`${config.apiUrl}/uploads?type=delete&key=${key}`, requestOptions).then(handleResponse);
 }
 

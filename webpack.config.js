@@ -1,3 +1,4 @@
+'use strict';
 const { VueLoaderPlugin } = require('vue-loader');
 
 const path = require('path');
@@ -35,14 +36,17 @@ module.exports = {
       template: './src/index.html'
     })],
   devServer: {
-    historyApiFallback: true
+    historyApiFallback: true,
+    contentBase: path.resolve(__dirname, './src'),
+    watchContentBase: true,
+    port: 9000
   },
   externals: {
     // global app config object
     config: JSON.stringify({
       apiUrl: process.env.API_URL || 'http://localhost:3000',
       siteHeader: {
-        'X-SLSMU-SITE': process.env.SITE || 'localhost'
+        'x-slsmu-site': process.env.SITE || 'localhost'
       },
       // Use this to create dynamic routes for contents
       contents: ['post'],

@@ -75,7 +75,7 @@ const actions = {
 
     userService.delete(email)
       .then(
-        user => commit('deleteSuccess', email),
+        email => commit('deleteSuccess', email),
         error => commit('deleteSuccess', { email, error: error.toString() })
       );
   }
@@ -83,7 +83,7 @@ const actions = {
 
 const mutations = {
   getMeRequest(state) {
-    state.me = { loading: true };
+    state.loading = { getMe: true };
   },
   getMeSuccess(state, me) {
     state.me = me;
@@ -153,7 +153,7 @@ const mutations = {
     state.all.items = state.items.map(user => {
       if (user.email === email) {
         // make copy of user without 'deleting:true' property
-        const { deleting, ...userCopy } = user;
+        const { ...userCopy } = user;
         // return copy of user with 'deleteError:[error]' property
         return { ...userCopy, deleteError: error };
       }

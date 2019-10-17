@@ -16,7 +16,8 @@ function get(content) {
     headers: { ...authHeader(), ...config.siteHeader }
   };
 
-  return fetch(`${config.apiUrl}/contents?type=get&contentType=${content.contentType}&id=${content.id}`, requestOptions).then(handleResponse);
+  const querystring = `?type=get&contentType=${content.contentType}&id=${content.id}`;
+  return fetch(`${config.apiUrl}/contents${querystring}`, requestOptions).then(handleResponse);
 }
 
 function add(content) {
@@ -32,7 +33,6 @@ function add(content) {
 }
 
 function update(content) {
-  console.log(content);
   const body = content;
   body.type = 'update';
   const requestOptions = {
@@ -67,6 +67,7 @@ function _delete(values) {
     headers: { ...authHeader(), ...config.siteHeader }
   };
 
-  return fetch(`${config.apiUrl}/contents?type=delete&id=${values.id}&contentType=${values.contentType}`, requestOptions).then(handleResponse);
+  const querystring = `?type=delete&id=${values.id}&contentType=${values.contentType}`;
+  return fetch(`${config.apiUrl}/contents${querystring}`, requestOptions).then(handleResponse);
 }
 

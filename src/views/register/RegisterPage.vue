@@ -9,7 +9,7 @@
       />
       <div class="form-group">
         <button
-          class="btn btn-primary"
+          class="btn btn-primary submit"
           :disabled="status.registering"
         >
           Register

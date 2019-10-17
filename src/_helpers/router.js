@@ -9,7 +9,7 @@ import ListUsersPage from '../views/user/List';
 import AddUserPage from '../views/user/AddPage';
 import UpdateUserPage from '../views/user/UpdatePage';
 import AddContentPage from '../views/content/AddPage';
-import UpdateContentPage from '../views/content/Update';
+//import UpdateContentPage from '../views/content/Update';
 import ListContentPage from '../views/content/List';
 import UploadPage from '../views/upload/Upload';
 import ListUploadPage from '../views/upload/List';
@@ -39,7 +39,7 @@ const routes = [
 // Dynamic content routes
 for (const content of config.contents) {
   routes.push({ path: `/contents/${content}/add`, component: AddContentPage });
-  routes.push({ path: `/contents/${content}/update`, component: UpdateContentPage });
+  // routes.push({ path: `/contents/${content}/update`, component: UpdateContentPage });
   routes.push({ path: `/contents/${content}`, component: ListContentPage });
 }
 

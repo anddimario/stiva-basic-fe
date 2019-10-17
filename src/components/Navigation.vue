@@ -6,6 +6,12 @@
       </router-link>
       <router-link
         v-if="status && status.loggedIn !== true"
+        to="/register"
+      >
+        Register
+      </router-link>
+      <router-link
+        v-if="status && status.loggedIn !== true"
         to="/login"
       >
         Login
@@ -44,7 +50,7 @@
           </li>
 
           <li v-if="me.userRole">
-            <router-link to="/users/update">
+            <router-link to="/users/update" class="user-update-button">
               Update
             </router-link>
           </li>
@@ -107,6 +113,14 @@ export default {
     }),
     permissionCheck(content, action, role) {
       return this.contentsPermissions[content][action].indexOf(role) > -1
+    }
+  },
+  watch: {
+    me: function () {
+      // Clear navigation data to remove item in menu
+      if (!this.me) {
+        Object.assign(this.$data, this.$options.data.apply(this))
+      }
     }
   }
 };

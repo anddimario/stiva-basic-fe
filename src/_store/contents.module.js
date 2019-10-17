@@ -27,7 +27,7 @@ const actions = {
           commit('addSuccess', content);
           dispatch('alert/success', 'Content added', { root: true });
         },
-        error =>  {
+        error => {
           commit('addFailure', error);
           dispatch('alert/error', error, { root: true });
         }
@@ -127,7 +127,7 @@ const mutations = {
     state.list.items = state.items.map(content => {
       if (content.id === values.id) {
         // make copy of content without 'deleting:true' property
-        const { deleting, ...contentCopy } = content;
+        const { ...contentCopy } = content;
         // return copy of content with 'deleteError:[error]' property
         return { ...contentCopy, deleteError: error };
       }
